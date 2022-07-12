@@ -1,8 +1,10 @@
 const express = require('express')
 const request = require('request')
+const cors = require('cors');
 
 const app = new express()
 app.use(express.json())
+app.use(cors())
 
 app.get('/api/supervisors', async (req, res) => {
     var url = 'https://o3m5qixdng.execute-api.us-east-1.amazonaws.com/api/managers';
