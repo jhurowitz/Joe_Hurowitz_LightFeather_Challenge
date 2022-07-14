@@ -1,9 +1,6 @@
 const express = require('express')
-const request = require('request')
 const cors = require('cors');
-const { application, response } = require('express');
 const bodyParser = require('body-parser');
-const e = require('express');
 
 const app = new express();
 app.use(express.json())
@@ -45,62 +42,55 @@ app.get('/api/supervisors', async (req, res) => {
 
 app.post('/api/submit', async (req, res) => {
     try {
-        var validForm = true
-
-        // Validate first name
         if (req.body.firstName != null && req.body.firstName.length > 0) {
             if (/\d+/.test(req.body.firstName)) {
                 throw new Error("Invalid first name, can only contain letters.")
-                validForm = false
             } 
         } 
         else {
             throw new Error("First name is missing.")
         }
 
-        // Validate last name
         if (req.body.lastName != null && req.body.lastName.length > 0) {
             if (/\d+/.test(req.body.lastName)) {
                 throw new Error("Invalid last name, can only contain letters.")
-                validForm = false
             } 
         } 
         else {
             throw new Error("Last name is missing.")
-            validForm = false
         }
 
-        // Validate supervisor
-        if (req.body.supervisor != null && req.body.supervisor.length > 0) {
+        if (req.body.supervisor == null || req.body.supervisor.length <= 0) {
             throw new Error("Supervisor is missing.")
-            validForm = false
         }
 
-        // Validate phone number
-        if (mismatch(reg.body.phone, /^\+?\d?[ -]?\(?\d{3}\)?[ -]?\d{3}[ -]?\d{4}$/)) {
-            throw new Error("Invalid phone number.")
-            validForm = false
+        if (req.body.phoneCheckBoxChecked) {
+            if (!(/^\+?\d?[ -]?\(?\d{3}\)?[ -]?\d{3}[ -]?\d{4}$/.test(req.body.phone.toLowerCase()))) {
+                throw new Error("Invalid phone number.")
+            }
         }
 
-        // Validate email
-        if (mismatch(reg.body.email.toLowerCase(), /^[a-z0-9\-_\.]+@[a-z0-9\-_\.]+\.[a-z]{2,4}$/)) {
-            throw new Error("Invalid email.")
-            validForm = false
+        if (req.body.emailCheckBoxChecked) {
+            if (!(/^[a-z0-9\-_\.]+@[a-z0-9\-_\.]+\.[a-z]{2,4}$/).test(req.body.email.toLowerCase())) {
+                throw new Error("Invalid email.")
+            }
         }
 
-        if (validForm) {
-            console.log({
-                'First Name' : req.body.firstName, 
-                'Last Name' : req.body.lastName, 
-                'Phone' : req.body.phone, 
-                'Email' : req.body.email, 
-                'Supervisor' : req.body.supervisor
-            })
-        }
+        console.log({
+            'First Name' : req.body.firstName, 
+            'Last Name' : req.body.lastName, 
+            'Phone' : req.body.phone, 
+            'Email' : req.body.email, 
+            'Supervisor' : req.body.supervisor
+        })
 
+        res.json({
+            'success' : true
+        })
     }
     catch(e) {
         res.json({
+            'success' : false,
             'error': e.message
         })
     }

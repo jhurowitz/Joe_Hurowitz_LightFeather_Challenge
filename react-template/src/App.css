@@ -71,8 +71,7 @@
 	width: 55%;
 }
 
-.form-style-2 input[type=submit],
-.form-style-2 input[type=button] {
+.form-style-2 button[name=submit] {
 	border: none;
 	margin-top: 1em;
 	padding: 8px 15px 8px 15px;
@@ -86,8 +85,11 @@
 	-moz-border-radius: 3px;
 }
 
-.form-style-2 input[type=submit]:hover,
-.form-style-2 input[type=button]:hover {
+.form-style-2 button[name=submit]:hover {
 	background: #EA7B00;
 	color: #fff;
+}
+
+input[type=checkbox] {
+	margin-left: 1em;
 }

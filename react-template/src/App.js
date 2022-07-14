@@ -8,17 +8,19 @@ function App() {
   const [supervisor, setSupervisor] = useState('');
   const [firstName, setFirstName] = useState('');
   const [lastName, setLastName] = useState('');
-  const [emailCheckBoxChecked, setEmailCheckBox] = useState(true);
-  const [phoneCheckBoxChecked, setPhoneCheckBox] = useState(true);
+  const [emailCheckBoxChecked, setEmailCheckBox] = useState(false);
+  const [phoneCheckBoxChecked, setPhoneCheckBox] = useState(false);
   const [email, setEmail] = useState('');
   const [phone, setPhone] = useState('');
 
   useEffect(() => {
+    if (supervisors.length === 0) {
       fetch('http://localhost:8080/api/supervisors')
       .then((response) => response.json())
       .then((supervisor) => { 
         setSupervisors(supervisor)
       })
+    }
   })
 
   const handleFirstNameChange = (e) => {
@@ -32,18 +34,24 @@ function App() {
   var handleEmailCheckBox = (e) => {
     if (emailCheckBoxChecked) {
       setEmailCheckBox(false)
+      document.getElementById('email').setAttribute('disabled', '');
+      setEmail('');
     } 
     else {
       setEmailCheckBox(true)
+      document.getElementById('email').removeAttribute('disabled');
     }
   }
 
   var handlePhoneCheckBox = (e) => {
     if (phoneCheckBoxChecked) {
       setPhoneCheckBox(false)
+      document.getElementById('phone').setAttribute('disabled', '');
+      setPhone('');
     } 
     else {
       setPhoneCheckBox(true)
+      document.getElementById('phone').removeAttribute('disabled');
     }
   }
 
@@ -60,14 +68,14 @@ function App() {
   }
 
   const handleFormSubmit = (e) => {
-    console.log(JSON.stringify({ firstName, lastName, email, phone, supervisor }))
     fetch('http://localhost:8080/api/submit', {
       method : 'POST',
       headers : { 'Content-type' : 'application/json; charset=UTF-8' }, 
-      body : JSON.stringify({ firstName })
+      body : JSON.stringify({ firstName, lastName, emailCheckBoxChecked, email, phoneCheckBoxChecked, phone, supervisor })
     })
-    .then((response) => response.json())
-    .then((data) => alert(data))
+    .then((response) => { return response.json() })
+
+    alert('Thank you for your submission!');
   }
 
   return (
@@ -83,7 +91,7 @@ function App() {
           name='firstName'
           onChange={handleFirstNameChange}
           value={firstName}
-        /><br/>
+        />
         <label htmlFor='lastName'><span className='required'>Last Name *</span></label>
         <input 
           required
@@ -92,13 +100,16 @@ function App() {
           name='lastName'
           onChange={handleLastNameChange}
           value={lastName}
-        /><br/>
+        />
         <p>How would you prefer to be notified?</p>
         <label htmlFor='email'><span>Email</span></label>
         <input 
+          disabled
+          required={emailCheckBoxChecked}
           className='input-field'
           type='email'
           name='email'
+          id='email'
           onChange={handleEmailChange}
           value={email}
         />
@@ -106,13 +117,15 @@ function App() {
           type='checkbox'
           name='emailCheckBox'
           onChange={handleEmailCheckBox}
-          required={emailCheckBoxChecked}
         />
         <label htmlFor='phone'><span>Phone number</span></label>
         <input 
+          disabled
+          required={phoneCheckBoxChecked}
           className='input-field'
           type='text'
           name='phone'
+          id='phone'
           onChange={handlePhoneNumberChange}
           value={phone}
         />
@@ -120,19 +133,18 @@ function App() {
           type='checkbox'
           name='phoneNumberCheckBox'
           onChange={handlePhoneCheckBox}
-          required={phoneCheckBoxChecked}
         />
         <label htmlFor='supervisorsDropDown'><span>Supervisors</span></label>
-        <select required className='select-field' name='supervisorsDropDown' onChange={handleSupervisorChange}>
-          <option key='baseOption' value={supervisor}></option>
+        <select required className='select-field' name='supervisorsDropDown' value={supervisor} onChange={handleSupervisorChange}>
+          <option key='baseOption'></option>
           { 
             supervisors.map((sup) => { 
-              return <option text='text' key={sup} value={supervisor}>{sup}</option> 
+              return <option text='text' key={sup}>{sup}</option> 
             }) 
           }
         </select>
         <br/>
-        <label><span> </span><input type="submit" value="Submit"/></label>
+        <label><span></span><button name='submit'>Submit</button></label>
       </form>
       </div>
     </div>
