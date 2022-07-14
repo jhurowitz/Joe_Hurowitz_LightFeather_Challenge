@@ -1,19 +1,24 @@
-# Joe_Hurowitz_LightFeather_Challenge
- LightFeather Coding Challenge
+# Joe Hurowitz - LightFeather Coding Challenge
+LightFeather Coding Challenge
 
+Will need to run
+- npm install cors
 
-1) Get api/supervisors
-Was able to use this to auto-populate select drop down form option.
-Also successful in sorting them based on jurisdiction, last name, then first name.
+Start program by running 'docker-compose build; docker-compose up' 
+in both the express-template and react-template directories.
 
-2) POST api/submit
-Made validations to catch and send errors based on situations, but unable to get passed 404 error.
-Curl methods from terminals and CMD would still produce 404.
+The form comes initially set with the first name, last name, and
+supervisor fields required for submission. The supervisor drop down
+is auto-populated with the GET api/supervisors, which is why the 
+docker must be running for both express-template and react-template.
+Also, initially, the email and phone input fields are disabled and
+not required. Upon checking the checkbox next to either the email 
+or phone input fields, it will enable and require that field.
 
-3) Front end
-Built form and used CSS from external source. On Firefox, checkboxes worked for requiring and not requiring email/phone number, but seemed to act differently on Chrome. Submit form could send console log with data, but was unable to post with fetch methods. 
+Upon form submission, an alert is triggered for the client. In the event
+of a submission containing all fields with valid information, a
+console log will be triggered on the back-end containing all submitted
+information. In the event that a field is missing or containing invalid
+information, an error message will be sent to the client via response and
+the back-end will not receive a console log.
 
-May need to run 
-__________________
-npm install cors
-docker-compose build; docker-compose up <-- in both react and express template folders
